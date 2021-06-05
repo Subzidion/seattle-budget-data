@@ -1,6 +1,6 @@
 {
   "name": "seattle-budget-data",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Budget data for the city of Seattle",
   "main": "index.js",
   "files": [
