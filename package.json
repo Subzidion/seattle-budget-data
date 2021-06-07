@@ -2,7 +2,8 @@
   "name": "seattle-budget-data",
   "version": "0.1.0",
   "description": "Budget data for the city of Seattle",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "build/**/*"
   ],
