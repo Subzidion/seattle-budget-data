@@ -1,22 +1,27 @@
 import fetch from "cross-fetch";
 
 export interface Expense {
+  name: string;
   description: string;
   approvedAmount: number;
 }
 export interface Program {
+  name: string;
   expenses: Record<string, Expense>;
   approvedAmount: number;
 }
 export interface Department {
+  name: string;
   programs: Record<string, Program>;
   approvedAmount: number;
 }
 export interface Service {
+  name: string;
   departments: Record<string, Department>;
   approvedAmount: number;
 }
 export interface OperationalBudget {
+  name: string;
   services: Record<string, Service>;
   approvedAmount: number;
 }
@@ -51,18 +56,24 @@ function normalize(tree: Budgets, row: BudgetRow): Budgets {
   const expenseAmount = parseFloat(row["approved_amount"]) || 0;
 
   // Add row to tree
-  tree[fiscalYear] ??= { services: {}, approvedAmount: 0 };
-  tree[fiscalYear].services[service] ??= { departments: {}, approvedAmount: 0 };
+  tree[fiscalYear] ??= { name: fiscalYear, services: {}, approvedAmount: 0 };
+  tree[fiscalYear].services[service] ??= {
+    name: service,
+    departments: {},
+    approvedAmount: 0,
+  };
   tree[fiscalYear].services[service].departments[department] ??= {
+    name: department,
     programs: {},
     approvedAmount: 0,
   };
   tree[fiscalYear].services[service].departments[department].programs[
     program
-  ] ??= { expenses: {}, approvedAmount: 0 };
+  ] ??= { name: program, expenses: {}, approvedAmount: 0 };
   tree[fiscalYear].services[service].departments[department].programs[
     program
   ].expenses[expense] ??= {
+    name: expense,
     description: expenseDescription,
     approvedAmount: expenseAmount,
   };
