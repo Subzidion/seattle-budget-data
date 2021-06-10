@@ -1,30 +1,35 @@
 import fetch from "cross-fetch";
 
-export interface Expense {
+enum ItemType {
+  TopLevel = "TOP_LEVEL",
+  Service = "SERVICE",
+  Department = "DEPARTMENT",
+  Program = "PROGRAM",
+  Expense = "EXPENSE",
+}
+
+interface Item {
   name: string;
+  approvedAmount: number;
+  type: ItemType;
+}
+
+export interface Expense extends Item {
   description: string;
-  approvedAmount: number;
 }
-export interface Program {
-  name: string;
+export interface Program extends Item {
   expenses: Record<string, Expense>;
-  approvedAmount: number;
 }
-export interface Department {
-  name: string;
+export interface Department extends Item {
   programs: Record<string, Program>;
-  approvedAmount: number;
 }
-export interface Service {
-  name: string;
+export interface Service extends Item {
   departments: Record<string, Department>;
-  approvedAmount: number;
 }
-export interface OperationalBudget {
-  name: string;
+export interface OperationalBudget extends Item {
   services: Record<string, Service>;
-  approvedAmount: number;
 }
+
 export interface Budgets {
   [fiscalYear: string]: OperationalBudget;
 }
@@ -56,26 +61,39 @@ function normalize(tree: Budgets, row: BudgetRow): Budgets {
   const expenseAmount = parseFloat(row["approved_amount"]) || 0;
 
   // Add row to tree
-  tree[fiscalYear] ??= { name: fiscalYear, services: {}, approvedAmount: 0 };
+  tree[fiscalYear] ??= {
+    name: fiscalYear,
+    services: {},
+    approvedAmount: 0,
+    type: ItemType.TopLevel,
+  };
   tree[fiscalYear].services[service] ??= {
     name: service,
     departments: {},
     approvedAmount: 0,
+    type: ItemType.Service,
   };
   tree[fiscalYear].services[service].departments[department] ??= {
     name: department,
     programs: {},
     approvedAmount: 0,
+    type: ItemType.Department,
   };
   tree[fiscalYear].services[service].departments[department].programs[
     program
-  ] ??= { name: program, expenses: {}, approvedAmount: 0 };
+  ] ??= {
+    name: program,
+    expenses: {},
+    approvedAmount: 0,
+    type: ItemType.Program,
+  };
   tree[fiscalYear].services[service].departments[department].programs[
     program
   ].expenses[expense] ??= {
     name: expense,
     description: expenseDescription,
     approvedAmount: expenseAmount,
+    type: ItemType.Expense,
   };
 
   // Increment relevant tree nodes for each expense.
