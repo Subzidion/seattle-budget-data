@@ -12,6 +12,7 @@ interface Item {
   name: string;
   approvedAmount: number;
   type: ItemType;
+  childType?: ItemType;
 }
 
 export interface Expense extends Item {
@@ -66,18 +67,21 @@ function normalize(tree: Budgets, row: BudgetRow): Budgets {
     services: {},
     approvedAmount: 0,
     type: ItemType.TopLevel,
+    childType: ItemType.Service,
   };
   tree[fiscalYear].services[service] ??= {
     name: service,
     departments: {},
     approvedAmount: 0,
     type: ItemType.Service,
+    childType: ItemType.Department,
   };
   tree[fiscalYear].services[service].departments[department] ??= {
     name: department,
     programs: {},
     approvedAmount: 0,
     type: ItemType.Department,
+    childType: ItemType.Program,
   };
   tree[fiscalYear].services[service].departments[department].programs[
     program
@@ -86,6 +90,7 @@ function normalize(tree: Budgets, row: BudgetRow): Budgets {
     expenses: {},
     approvedAmount: 0,
     type: ItemType.Program,
+    childType: ItemType.Expense,
   };
   tree[fiscalYear].services[service].departments[department].programs[
     program
