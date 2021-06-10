@@ -1,18 +1,25 @@
 import fetch from "cross-fetch";
 
 enum ItemType {
-  TopLevel = "TOP_LEVEL",
-  Service = "SERVICE",
-  Department = "DEPARTMENT",
-  Program = "PROGRAM",
-  Expense = "EXPENSE",
+  TopLevel = "top_level",
+  Service = "service",
+  Department = "department",
+  Program = "program",
+  Expense = "expense",
+}
+
+enum ChildItemType {
+  Services = "services",
+  Departments = "departments",
+  Programs = "programs",
+  Expenses = "expenses",
 }
 
 interface Item {
   name: string;
   approvedAmount: number;
   type: ItemType;
-  childType?: ItemType;
+  childType?: ChildItemType;
 }
 
 export interface Expense extends Item {
@@ -67,21 +74,21 @@ function normalize(tree: Budgets, row: BudgetRow): Budgets {
     services: {},
     approvedAmount: 0,
     type: ItemType.TopLevel,
-    childType: ItemType.Service,
+    childType: ChildItemType.Services,
   };
   tree[fiscalYear].services[service] ??= {
     name: service,
     departments: {},
     approvedAmount: 0,
     type: ItemType.Service,
-    childType: ItemType.Department,
+    childType: ChildItemType.Departments,
   };
   tree[fiscalYear].services[service].departments[department] ??= {
     name: department,
     programs: {},
     approvedAmount: 0,
     type: ItemType.Department,
-    childType: ItemType.Program,
+    childType: ChildItemType.Programs,
   };
   tree[fiscalYear].services[service].departments[department].programs[
     program
@@ -90,7 +97,7 @@ function normalize(tree: Budgets, row: BudgetRow): Budgets {
     expenses: {},
     approvedAmount: 0,
     type: ItemType.Program,
-    childType: ItemType.Expense,
+    childType: ChildItemType.Expenses,
   };
   tree[fiscalYear].services[service].departments[department].programs[
     program
