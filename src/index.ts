@@ -1,4 +1,4 @@
-import fetch from "cross-fetch";
+import "cross-fetch/polyfill";
 
 enum ItemType {
   TopLevel = "top_level",
