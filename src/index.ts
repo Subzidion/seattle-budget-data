@@ -1,7 +1,7 @@
 import "cross-fetch/polyfill";
 
 enum ItemType {
-  TopLevel = "top_level",
+  OperationalBudget = "operational_budget",
   Service = "service",
   Department = "department",
   Program = "program",
@@ -38,7 +38,7 @@ export interface OperationalBudget extends Item {
   services: Record<string, Service>;
 }
 
-export interface Budgets {
+export interface OperationalBudgets {
   [fiscalYear: string]: OperationalBudget;
 }
 
@@ -58,7 +58,10 @@ interface BudgetRow {
   fund_type: string;
 }
 
-function normalize(tree: Budgets, row: BudgetRow): Budgets {
+function normalize(
+  tree: OperationalBudgets,
+  row: BudgetRow
+): OperationalBudgets {
   // Load data from row
   const fiscalYear = row["fiscal_year"];
   const service = row["service"];
@@ -73,7 +76,7 @@ function normalize(tree: Budgets, row: BudgetRow): Budgets {
     name: fiscalYear,
     services: {},
     approvedAmount: 0,
-    type: ItemType.TopLevel,
+    type: ItemType.OperationalBudget,
     childType: ChildItemType.Services,
   };
   tree[fiscalYear].services[service] ??= {
@@ -125,7 +128,7 @@ export default fetch(
 )
   .then((response) => response.json())
   .then((data) =>
-    data.reduce((tree: Budgets, row: BudgetRow) => {
+    data.reduce((tree: OperationalBudgets, row: BudgetRow) => {
       return normalize(tree, row);
     }, {})
   );

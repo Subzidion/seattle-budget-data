@@ -78,7 +78,7 @@ fetch.mockResponse(
       expense_type: "Expense",
       description: "Special Operations",
       recommended_amount: "0",
-      approved_amount: "5000",
+      approved_amount: "350",
     },
     {
       fiscal_year: "2020",
@@ -91,7 +91,7 @@ fetch.mockResponse(
       expense_type: "Expense",
       description: "CUSTOMER AND BILLING",
       recommended_amount: "0",
-      approved_amount: "300",
+      approved_amount: "2500",
     },
     {
       fiscal_year: "2020",
@@ -104,7 +104,7 @@ fetch.mockResponse(
       expense_type: "Expense",
       description: "TRANSPORTATION RELOCATIONS",
       recommended_amount: "0",
-      approved_amount: "50",
+      approved_amount: "2500",
     },
   ])
 );
